@@ -27,8 +27,7 @@ async def main() -> None:
     # Polling and a webhook exclude each other: starting here would silently disconnect the cloud bot.
     hook = (await telegram.webhook_info()).get("url")
     if hook and "--force" not in sys.argv:
-        raise SystemExit(f"The cloud bot is live (webhook {hook}). Not starting locally.
-"
+        raise SystemExit(f"The cloud bot is live (webhook {hook}). Not starting locally.\n"
                          "To take over anyway: python -m app.run_polling --force "
                          "(afterwards re-run scripts.set_webhook to hand back to the cloud).")
     init_db()
