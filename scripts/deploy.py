@@ -116,7 +116,8 @@ def main() -> None:
                                 capture_output=True, text=True).returncode == 0
         job = ["--location", args.region, *common, "--schedule", schedule,
                "--time-zone", env.get("TIMEZONE") or "Europe/Warsaw", "--uri", f"{url}{path}",
-               "--http-method", "POST", "--attempt-deadline", "300s", "--format", "none"]
+               "--http-method", "POST", "--attempt-deadline", "300s", "--format", "none",
+               "--message-body", "{}"]  # Google's front end rejects a body-less POST (411 Length Required)
         if exists:
             gcloud("scheduler", "jobs", "update", "http", name, *job, f"--update-headers=X-Jobs-Secret={env['JOBS_SECRET']}")
         else:
