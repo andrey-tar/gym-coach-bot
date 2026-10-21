@@ -7,6 +7,8 @@ Per-call context goes in front of the latest user message, not in the system pro
 prefix (system + tools + earlier conversation) stays byte-identical and cacheable across turns.
 """
 
+from __future__ import annotations
+
 import json
 import logging
 import os
@@ -14,7 +16,6 @@ import time
 from datetime import datetime, timezone
 from typing import Awaitable, Callable
 
-import anthropic
 from google import genai
 from google.genai import errors as genai_errors
 from google.genai import types as gt
@@ -129,6 +130,7 @@ def with_context(messages: list[dict], context: str) -> list[dict]:
 
 def _anthropic_client() -> anthropic.AsyncAnthropic:
     global _anthropic
+    import anthropic  # imported on first use: ~3 s of cold start that a Gemini-only instance never needs
     if _anthropic is None:
         if not os.getenv("ANTHROPIC_API_KEY"):
             raise LLMUnavailable("Ключ ANTHROPIC_API_KEY не задан в .env.")
@@ -137,6 +139,7 @@ def _anthropic_client() -> anthropic.AsyncAnthropic:
 
 
 async def _anthropic_create(model: str, purpose: str, **kwargs):
+    import anthropic
     started = time.monotonic()
     client = _anthropic_client()
     try:

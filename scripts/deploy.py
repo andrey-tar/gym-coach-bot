@@ -97,6 +97,7 @@ def main() -> None:
                "--max-instances", "1",        # one process -> the handler lock serializes all updates
                "--min-instances", "0",        # scale to zero when idle (free)
                "--cpu", "1", "--memory", "512Mi", "--timeout", "600",
+               "--cpu-boost",                 # extra CPU while starting: shorter cold start
                "--env-vars-file", vars_path)
     finally:
         os.remove(vars_path)

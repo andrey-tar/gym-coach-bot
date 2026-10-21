@@ -87,8 +87,11 @@ def init_db() -> None:
         # Supabase serves every public table over its Data API; RLS with no policies closes that door.
         # The bot connects as the table owner, which RLS doesn't restrict.
         with engine.begin() as conn:
-            for table in Base.metadata.sorted_tables:
-                conn.execute(text(f'alter table "{table.name}" enable row level security'))
+            open_tables = conn.execute(text(
+                "select relname from pg_class where relnamespace = 'public'::regnamespace "
+                "and relkind = 'r' and not relrowsecurity")).scalars().all()  # one round trip on a warm DB
+            for name in set(open_tables) & {t.name for t in Base.metadata.sorted_tables}:
+                conn.execute(text(f'alter table "{name}" enable row level security'))
     with db_session() as db:
         if db.get(Profile, 1) is None:
             db.add(Profile(
