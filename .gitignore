@@ -1,0 +1,14 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+data/
+eval_runs/
+.env.*
+!.env.example
+*.db
+*.jsonl
+*.log
+# personal training data: only the blank template is published
+*.xlsx
+!training_history_import_template.xlsx

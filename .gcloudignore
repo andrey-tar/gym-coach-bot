@@ -1,0 +1,15 @@
+# Files NOT uploaded to Google Cloud Build. Secrets travel separately, as Cloud Run settings.
+.gcloudignore
+.git/
+.gitignore
+.env
+.env.*
+!.env.example
+.venv/
+__pycache__/
+*.pyc
+data/
+eval_runs/
+scripts/
+*.xlsx
+*.md
